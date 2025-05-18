@@ -4,9 +4,8 @@ const cors = require('cors')
 require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const me = require('./routes/me');
-const authMiddleware = require('./middleware/authMiddleware');
-const User = require('./models/User');
 const app = express()
+const addFriend = require('./routes/addFriend')
 
 app.use(cors())
 app.use(express.json())
@@ -27,6 +26,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.get('/', (req, res) => res.send('API Running'));
 app.use('/api/auth', authRoutes); 
 app.use('/api', me); 
+app.use('/api', addFriend); 
 
 
 
