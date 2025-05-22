@@ -1,131 +1,102 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
-
+import { Link, useNavigate } from 'react-router-dom'
 
 const Register = () => {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [msg, setMsg] = useState('')
+  const navigate = useNavigate()
 
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [msg, setMsg] = useState('')
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-
-        try {
-            const res = await axios.post('http://localhost:5000/api/auth/register', {
-                name,
-                email,
-                password
-
-            })
-
-            setMsg(res.data.message);
-            
-        } catch (err) {
-            setMsg(err.response.data.message)
-            console.log(err.response.data.message)
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/register', {
+        name,
+        email,
+        password
+      })
+      setMsg(res.data.message)
+      navigate('/login')
+    } catch (err) {
+      setMsg(err.response?.data?.message || 'Registration failed')
     }
-
-
-
+  }
 
   return (
-
-    <div>
-        
-      <div className="min-h-screen flex flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-black">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
-            Sign in to your account
-          </h2>
+    <div className="min-h-screen bg-black flex flex-col justify-center items-center px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-extrabold text-indigo-700 mb-2">Welcome to CodeCracker</h1>
+          <p className="text-indigo-500 text-lg">Create your account</p>
         </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-
+        <div className="bg-white rounded-2xl shadow-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-
             <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-white">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Name
               </label>
-              <div className="mt-2">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="block w-full rounded-lg border border-gray-300 bg-[#f0f0f1] px-3 py-2 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+              />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-white">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email address
               </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="block w-full rounded-lg border border-gray-300 bg-[#f0f0f1] px-3 py-2 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+              />
             </div>
-
             <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm/6 font-medium text-white">
-                  Password
-                </label>
-              </div>
-
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="new-password"
+                className="block w-full rounded-lg border border-gray-300 bg-[#f0f0f1] px-3 py-2 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+              />
             </div>
-
-            <div>
-
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
-                duration-500 ease-in-out
-                active:scale-95
-                "
-              >
-                Sign in
-              </button>
-            </div>
-
-            <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-red-600">
-              {msg}  
-          </h2>
-
+            <button
+              type="submit"
+              className="w-full rounded-lg bg-indigo-600 px-4 py-2 text-base font-semibold text-white shadow-md hover:bg-indigo-500 transition duration-200 active:scale-[97%]"
+            >
+              Register
+            </button>
+            {msg && (
+              <div className="text-center text-sm font-medium text-indigo-600 mt-2">{msg}</div>
+            )}
           </form>
-
+          <div className="mt-8 text-center">
+            <span className="text-gray-600">Already have an account ?</span>{'  '}
+            <Link
+              to="/login"
+              className="inline-block px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-500 transition duration-200"
+            >
+              Log in
+            </Link>
+          </div>
         </div>
       </div>
-
-
     </div>
   )
 }

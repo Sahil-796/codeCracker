@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const me = require('./routes/me');
 const app = express()
 const addFriend = require('./routes/addFriend')
+const addPlatform = require('./routes/addPlatform')
 
 app.use(cors())
 app.use(express.json())
@@ -27,6 +28,7 @@ app.get('/', (req, res) => res.send('API Running'));
 app.use('/api/auth', authRoutes); 
 app.use('/api', me); 
 app.use('/api', addFriend); 
+app.use('/api', addPlatform); 
 
 app.get('/sample',(req,res) => res.json({
     "_id": "682c16c3faec7c7cdf3f16db",

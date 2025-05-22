@@ -8,14 +8,14 @@ const Layout = () => {
     
 
   return (
-    <div className='text-black flex h-screen'>
+    <div className='text-black flex '>
      
 
         
         <Sidebar/>
      
     
-    <main className="flex-1 transition-all duration-300"><Outlet /></main>
+    <main className="ml-64 min-h-screen w-full overflow-x-auto transition-all duration-300"><Outlet /></main>
     </div>
   )
 }

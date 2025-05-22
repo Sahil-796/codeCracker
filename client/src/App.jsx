@@ -4,17 +4,20 @@ import Login from './pages/login'
 import { Routes, Route, BrowserRouter } from "react-router-dom"
 import Dashboard from './pages/Dashboard'
 import AuthProvider from './context/authContext'
+import DataProvider from './context/DataContext'
 import Layout from './components/Layout'
 import Friends from './pages/Friends'
+import AddPlatform from './pages/AddPlatform'
+
 
 const App = () => {
 
-  const token = localStorage.getItem("token");
 
  return (
 
 
 <AuthProvider>
+  <DataProvider>
      <BrowserRouter>
 
       <Routes>
@@ -27,6 +30,7 @@ const App = () => {
         <Route element={<Layout />}>
           <Route path='/' element={<Dashboard/>}/>
           <Route path='/friends' element={<Friends/>}/>
+          <Route path='/AddPlatform' element={<AddPlatform/>}/>
           
         </Route>
       </Routes>
@@ -34,6 +38,7 @@ const App = () => {
 
 
     </BrowserRouter>
+    </DataProvider>
 </AuthProvider>
   )
 }

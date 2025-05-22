@@ -18,7 +18,7 @@ router.post('/addFriend', authMiddleware, async (req, res)=>{
 
     const user = await User.findById(req.user.userId)
     if (!user) {
-      return res.status(404).json({ message: "Friend not found, jokes on you."})
+      return res.status(404).json({ message: "User not found, jokes on you."})
     }
 
 

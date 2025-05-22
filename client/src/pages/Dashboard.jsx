@@ -1,63 +1,40 @@
 import React, {useState, useEffect} from 'react'
 import {Navigate, Link} from 'react-router-dom'
-import axios from 'axios'
+
 import TotalSolved from '../components/TotalSolved'
 import {CirclePlus} from 'lucide-react'
 import sloth from '../assets/sloth.png'
 import Leetcode from '../components/Leetcode'
-
+import Codeforces from '../components/Codeforces'
+import {PulseLoader} from 'react-spinners'
+import { useAuth } from '../context/authContext'
+import {useData} from '../context/DataContext'
 
 const Dashboard = () => {
   
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [friends, setFriends] = useState(null)
-  const [platforms, setPlatforms] = useState(null)
-  const [platformStats, setplatformStats] = useState(null)
-  const [totalSolved, setTotalSolved] = useState()
-
-
-  const [unauthorized, setUnauthorized] = useState(false)
-
-    const token = localStorage.getItem('token')
-     
   
-    
-    useEffect( () => {
-      const fetchData = async() => {
-      try{
-        const response = await axios.get('http://localhost:5000/sample',{
-
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        setEmail(response.data.email)
-        setUsername(response.data.username)
-        setFriends(response.data.friends)
-        setPlatforms(response.data.platforms)
-        setplatformStats(response.data.platformStats)
-        setTotalSolved(response.data.totalSolved)
-
-
-      } catch(err){
-        if(err.response && err.response.status === 401){
-          localStorage.removeItem('token')
-          setUnauthorized(true)
-        }
-      }
-    
-    }
-
-    fetchData()
-    }, [token])
-
-    if (!token || unauthorized) {
+  
+  
+  const { isAuthenticated, setIsAuthenticated } = useAuth()
+    if (!isAuthenticated) {
       return <Navigate to='/login' replace/>
+    }
+    
+    const {username, email, platforms, platformStats, loading, token} = useData()
+    if (loading){
+      return (
+      
+
+        <div className='flex justify-center items-center h-screen bg-[#f0f0f1]'>
+      <PulseLoader/>
+    </div>
+    
+    
+    )
     }
 
   return (
-    <div className='h-full bg-[#f0f0f1] p-6'>
+    <div className='min-h-screen bg-[#f0f0f1] p-6'>
     
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6 tracking-tight">
       Hi <span className="text-indigo-600">{username} 👋 </span>
@@ -68,7 +45,7 @@ const Dashboard = () => {
        <NoPlatformFound/> </div>}
 
 {/* Platform dashboard body */}
-<div className='flex flex-col'> 
+<div className='flex flex-col gap-10'> 
 
         
         {platforms && platforms.length > 0 && <Main platformStats={platformStats}/>
@@ -98,7 +75,7 @@ function NoPlatformFound() {
 
   
       <button className="bg-indigo-600 rounded-4xl">
-        <Link to="/add-platform" className=" hover:bg-indigo-800 text-white p-2 rounded-4xl active:duration-300 ease-in-out active:scale-[97%] flex flex-row gap-1.5"> <CirclePlus/> Add Platform</Link>
+        <Link to="/AddPlatform" className=" hover:bg-indigo-800 text-white p-2 rounded-4xl active:duration-300 ease-in-out active:scale-[97%] flex flex-row gap-1.5"> <CirclePlus/> Add Platform</Link>
       </button>
     </div>
   );
@@ -112,6 +89,8 @@ function Main({platformStats}){
         switch (pf.platform) {
           case "leetcode":
              return <Leetcode data={pf} key={idx}/>
+          case "codeforces":
+             return <Codeforces data={pf} key={idx}/>
           
         }
         })
