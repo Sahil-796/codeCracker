@@ -1,4 +1,5 @@
 import React , { createContext, useContext, useState, useEffect } from "react";
+
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
@@ -7,7 +8,7 @@ const DataContext = createContext();
 
 const DataProvider = ({children}) => {
 
-    const [username, setUsername] = useState("")
+      const [username, setUsername] = useState("")
       const [email, setEmail] = useState("")
       const [friends, setFriends] = useState(null)
       const [platforms, setPlatforms] = useState(null)
@@ -16,6 +17,7 @@ const DataProvider = ({children}) => {
       const [loading, setLoading] = useState(false)
     
       const [token, setToken] =  useState(()=>Cookies.get('token'))
+      const [isAuthenticated, setIsAuthenticated] = useState(!!token);
 
   useEffect(() => {
 
@@ -38,7 +40,6 @@ const DataProvider = ({children}) => {
       try{
         
         const response = await axios.get('http://localhost:5000/api/me',{
-
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -49,14 +50,17 @@ const DataProvider = ({children}) => {
         setPlatforms(response.data.platforms)
         setplatformStats(response.data.platformStats)
         setTotalSolved(response.data.totalSolved)
-
+        
         
 
       } catch(err){
-        
+          if(err.response && err.response.stats === 401){
+            Cookies.remove('token')
+            setIsAuthenticated(false)
+          }
       }
        finally {
-      setLoading(false); // Always set loading to false after fetch
+      setLoading(false); 
     }
     
     }
@@ -65,7 +69,7 @@ const DataProvider = ({children}) => {
     }, [token])
 
     return (
-    <DataContext.Provider value={{ username, email, friends, platforms, platformStats, loading, token, setToken }}>
+    <DataContext.Provider value={{ username, email, totalSolved, friends, platforms, platformStats, loading, token, setToken, isAuthenticated, setIsAuthenticated }}>
       {children}
     </DataContext.Provider>
     )

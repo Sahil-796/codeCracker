@@ -11,14 +11,15 @@ router.get('/me', authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.user.userId).select('-password').populate('friends','username totalSolved')
         
-        // promise.all, another chad functionality of js, allows us to run multiple apis simultaneously ensuring each would return a response. How convieint is that !!!!
+        // promise.all (promise.allSettled), another chad functionality of js, allows us to run multiple apis simultaneously ensuring each would return a response. How convieint is that !!!!
 
-        const platStats = await Promise.all(
+        const platStatsResults = await Promise.allSettled(
         user.platforms.map( async (pf) => {
             let stats = {}
+            try{
             switch (pf.platform) {
                 case 'leetcode':
-                    const responseL = await axios.get(`http://localhost:3000/userProfile/${pf.username}`)
+                    const responseL = await axios.get(`https://alfa-leetcode-api-fz0q.onrender.com/userProfile/${pf.username}`)
                     stats = {
                         totalSolved : responseL.data.totalSolved, 
                         totalSubmissions : responseL.data.totalSubmissions, 
@@ -27,9 +28,9 @@ router.get('/me', authMiddleware, async (req, res) => {
                     }
                     break;
                 case 'codeforces':
-                    const responseCf = await axios.get(`https://codeforces-api-oq6l.onrender.com/user/${pf.username}`)
-                    const response2Cf = await axios.get(`https://codeforces-api-oq6l.onrender.com/user/${pf.username}/solved`)
-                    const response3Cf = await axios.get(`https://codeforces-api-oq6l.onrender.com/user/${pf.username}/rating`)
+                    const responseCf = await axios.get(`https://codeforces-api-we09.onrender.com/user/${pf.username}`)
+                    const response2Cf = await axios.get(`https://codeforces-api-we09.onrender.com/user/${pf.username}/solved`)
+                    const response3Cf = await axios.get(`https://codeforces-api-we09.onrender.com/user/${pf.username}/rating`)
                     stats = {
                         totalSolved : responseCf.data.total_solved, 
                         rating: responseCf.data.rating,
@@ -49,13 +50,26 @@ router.get('/me', authMiddleware, async (req, res) => {
         return {
             platform: pf.platform,
             username: pf.username,
-            stats
+            stats,
+            error: null
             };
+        }catch (err) {
+            return {
+                platform : pf.platform,
+                username: pf.username,
+                stats: {},
+                error: err.message || 'Failed to fetch'
+            }
+        }
         }))
         
-    const totalSolved = platStats.reduce((sum, pf)=>{
-        return sum + (pf.stats.totalSolved || 0)
-    }, 0)
+    const platStats = platStatsResults.map(result =>
+  result.status === 'fulfilled' ? result.value : result.reason
+);
+
+
+const totalSolved = platStats.reduce((sum, pf) => sum + (pf.stats?.totalSolved || 0), 0);
+
 
     user.totalSolved = totalSolved
     await user.save()
@@ -69,7 +83,8 @@ router.get('/me', authMiddleware, async (req, res) => {
     )
     }
     catch (err) {
-        console.log(err)
+        
+        res.status(500).json({ message: "Server error" });
     }
     
 })

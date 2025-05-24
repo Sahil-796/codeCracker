@@ -32,14 +32,13 @@ router.post('/addFriend', authMiddleware, async (req, res)=>{
       friendUser.friends.push(user._id)
       await user.save()
       await friendUser.save()
-      return res.status(200).json({message: "friend added"})
+      return res.status(200).json({message: "Friend added"})
     }else{
       return res.status(400).json({message : "Friend already added."}) 
     }
 }
   
         catch (err) {
-          console.log(err)
           return res.status(500).json({message : "something went wront"})
         }
 

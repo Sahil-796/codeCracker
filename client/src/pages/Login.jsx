@@ -7,7 +7,7 @@ import {useData} from '../context/DataContext'
 
 const Login = () => {
   
-  const {isAuthenticated , setIsAuthenticated} = useAuth()
+  const {isAuthenticated , setIsAuthenticated} = useData()
   const {setToken} = useData()
 
   const [email, setEmail] = useState('');
@@ -28,7 +28,7 @@ const Login = () => {
       setToken(res.data.token)
       navigate('/');
     } catch (err) {
-      console.log(err)
+      
       setMsg(err.response?.data?.message || 'Login failed');
     }
   };

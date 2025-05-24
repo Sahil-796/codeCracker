@@ -2,16 +2,15 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {LayoutDashboard, Users, CirclePlus, LogOut} from 'lucide-react'
 import image from '../assets/logo.png'
-import {useAuth} from '../context/authContext'
 import {useData} from '../context/DataContext'
 import Cookies from 'js-cookie'
 
 
 const Sidebar = () => {
 
-  const {setIsAuthenticated} = useAuth()
 
- const { setToken } = useData()
+
+ const { setToken, setIsAuthenticated } = useData()
   const navigate = useNavigate()
 
   const logOut = () => {

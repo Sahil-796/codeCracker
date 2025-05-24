@@ -8,8 +8,7 @@ router.post('/register', async (req, res) =>{
 
     const {name, email, password} = req.body //keep the variables same as req.body 
     const userExists = await User.findOne({email})
-    console.log(req.body)
-    console.log()
+    
 
     if(userExists){
         return res.status(400).json({ message : 'User already exists' })
@@ -23,7 +22,7 @@ router.post('/register', async (req, res) =>{
             platforms: [],
             friends: []
         });
-        console.log(user)
+        
         await user.save();
 
         res.status(201).json({
@@ -50,7 +49,7 @@ router.post('/login', async (req, res) => {
         email: user.email,
     }
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '1h'})
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '7d'})
 
     res.status(200).json({
     message: 'Login successful',

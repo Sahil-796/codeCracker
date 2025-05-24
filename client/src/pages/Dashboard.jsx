@@ -1,32 +1,48 @@
 import React, {useState, useEffect} from 'react'
 import {Navigate, Link} from 'react-router-dom'
 
-import TotalSolved from '../components/TotalSolved'
 import {CirclePlus} from 'lucide-react'
 import sloth from '../assets/sloth.png'
 import Leetcode from '../components/Leetcode'
 import Codeforces from '../components/Codeforces'
 import {PulseLoader} from 'react-spinners'
-import { useAuth } from '../context/authContext'
 import {useData} from '../context/DataContext'
 
 const Dashboard = () => {
   
+
   
   
+  const { isAuthenticated, username, platforms, platformStats, loading } = useData()
+
+  const [isDelay, setisDelay] = useState(false)
   
-  const { isAuthenticated, setIsAuthenticated } = useAuth()
+    useEffect(()=>{
+      let timer
+
+      if(loading){
+        timer = setTimeout(()=>{
+          setisDelay(true)
+        }, 10000)
+      } else {
+        setisDelay(false)
+        clearTimeout(timer)
+      }
+      return () => clearTimeout(timer)
+    }, [loading])
+
+
     if (!isAuthenticated) {
+      
       return <Navigate to='/login' replace/>
     }
     
-    const {username, email, platforms, platformStats, loading, token} = useData()
     if (loading){
       return (
-      
 
-        <div className='flex justify-center items-center h-screen bg-[#f0f0f1]'>
+        <div className='flex flex-col gap-5 justify-center items-center h-screen bg-[#f0f0f1]'>
       <PulseLoader/>
+        {isDelay && (<p className='text-md font-semibold text-black'>Server timeout due to inactivity. Please wait a while. About 50s.</p>)}
     </div>
     
     
@@ -85,6 +101,14 @@ function Main({platformStats}){
  
    return <>  
        { platformStats.map((pf, idx) => {
+
+        if (pf.error) {
+          return (
+            <div key={idx} className="bg-white rounded-2xl shadow-md p-6 text-center text-red-600 font-bold">
+              {pf.platform.toUpperCase()} Error: {pf.error}
+            </div>
+          );
+        }
           
         switch (pf.platform) {
           case "leetcode":
