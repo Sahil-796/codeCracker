@@ -3,7 +3,6 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import { Routes, Route, BrowserRouter } from "react-router-dom"
 import Dashboard from './pages/Dashboard'
-import AuthProvider from './context/authContext'
 import DataProvider from './context/DataContext'
 import Layout from './components/Layout'
 import Friends from './pages/Friends'
@@ -16,7 +15,6 @@ const App = () => {
  return (
 
 
-<AuthProvider>
   <DataProvider>
      <BrowserRouter>
 
@@ -39,7 +37,6 @@ const App = () => {
 
     </BrowserRouter>
     </DataProvider>
-</AuthProvider>
   )
 }
 
