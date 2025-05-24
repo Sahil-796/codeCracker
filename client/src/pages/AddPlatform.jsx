@@ -57,7 +57,7 @@ const AddPlatform = () => {
     const handlesubmit = async (e) => {
       e.preventDefault();
       try {
-          const res = await axios.post('http://localhost:5000/api/addPlatform',{
+          const res = await axios.post('https://codecracker-bd72.onrender.com/api/addPlatform',{
             platform:platformToAdd,
             handle:username
           },{

@@ -49,7 +49,7 @@ const Friends = () => {
         e.preventDefault();
 
          try {
-                  const res = await axios.post('http://localhost:5000/api/addFriend',{
+                  const res = await axios.post('https://codecracker-bd72.onrender.com/api/addFriend',{
                     friend:friendName
                   },{
                   headers: {

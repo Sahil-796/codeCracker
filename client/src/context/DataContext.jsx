@@ -39,7 +39,7 @@ const DataProvider = ({children}) => {
       const fetchData = async() => {
       try{
         
-        const response = await axios.get('http://localhost:5000/api/me',{
+        const response = await axios.get('https://codecracker-bd72.onrender.com/api/me',{
           headers: {
             Authorization: `Bearer ${token}`
           }
