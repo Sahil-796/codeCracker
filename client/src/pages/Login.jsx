@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie'
-import {useAuth} from '../context/authContext'
 import {useData} from '../context/DataContext'
 
 const Login = () => {
