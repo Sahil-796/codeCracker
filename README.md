@@ -115,6 +115,11 @@
 
 [codecracker-nu.vercel.app](https://codecracker-nu.vercel.app/ "https://codecracker-nu.vercel.app")
 
+* the live demo may not work because the backend takes a while when it wakes up at render.
+* Here's some photos to have a look at the ui.
+* ![Screenshot 2025-05-31 094733](https://github.com/user-attachments/assets/9410df92-6586-41b3-825a-8e5ef549736b)
+
+
 ---
 
 ---
